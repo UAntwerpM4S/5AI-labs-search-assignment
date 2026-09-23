@@ -6,16 +6,17 @@
 
 - [Introduction](#introduction)
 - [Welcome to Pacman](#welcome-to-pacman)
-- [Finding a Fixed Food Dot](#part-i-finding-a-fixed-food-dot)
+- [PART I: Finding a Fixed Food Dot](#part-i-finding-a-fixed-food-dot)
     - [Exercise 1: Depth First Search](#exercise-1-depth-first-search)
     - [Exercise 2: Breadth First Search](#exercise-2-breadth-first-search)
     - [Exercise 3: Uniform-Cost Search](#exercise-3-uniform-cost-search)
     - [Exercise 4: A* search](#exercise-4-a-search)
-- [Finding All the Corners](#part-ii-finding-all-the-corners)
+- [PART II: Finding All the Corners](#part-ii-finding-all-the-corners)
     - [Exercise 5: Corners Problem](#exercise-5-corners-problem)
     - [Exercise 6: Corners Heuristic](#exercise-6-corners-heuristic)
 - [Extra: Eating All The Dots](#extra-eating-all-the-dots)
-    - [Exercise 7: Food Search Problem & Heuristic](#exercise-7-food-search-problem-&-heuristic)
+    - [Exercise 7: Food Search Heuristic](#exercise-7-food-search-heuristic)
+    - [Exercise 8: Suboptimal Search](#exercise-8-suboptimal-search)
 - [Useful commands](#useful-commands)
 
 ## Introduction
@@ -209,9 +210,7 @@ The trivial heuristics are the ones that return zero everywhere (UCS) and the he
 
 ## Extra: Eating All The Dots
 
-### Excercise 7: Food Search Problem & Heuristic
-
-Now we’ll solve a hard search problem: eating all the Pacman food in as few steps as possible. For this, we’ll need a new search problem definition that formalizes the food-clearing problem: `FoodSearchProblem` in `searchAgents.py` (implemented for you). A solution is defined to be a path that collects all of the food in the Pacman world. For the present project, solutions do not take into account any ghosts or power pellets; solutions only depend on the placement of walls, regular food, and Pacman. If you have written your general search methods correctly, A* with a null heuristic (equivalent to uniform-cost search) should quickly find an optimal solution to `testSearch` with no code changes on your part.
+Now we’ll solve a hard search problem: eating all the Pacman food in as few steps as possible. For this, we’ll need a new search problem definition that formalizes the food-clearing problem: `FoodSearchProblem` in `searchAgents.py` (implemented for you). A solution is defined to be a path that collects all of the food in the Pacman world. For the present project, solutions do not take into account any ghosts or power pellets; solutions only depend on the placement of walls, regular food, and Pacman. If you have written your general search methods correctly, A* with a null heuristic (equivalent to uniform-cost search) should quickly find an optimal solution to `testSearch` with no code changes on your part (total cost of 7).
 
 ```bash
 python pacman.py -l testSearch -p AStarFoodSearchAgent
@@ -223,17 +222,36 @@ Note: `AStarFoodSearchAgent` is a shortcut for:
 python pacman.py -l testSearch -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=foodHeuristic
 ```
 
-You should find that UCS starts to slow down even for the seemingly simple `tinySearch`. As a reference, our implementation takes 2.5 seconds to find a path of length 27 after expanding 5057 search nodes.
+You should find that UCS starts to slow down even for the seemingly simple `tinySearch`. As a reference, our implementation takes about 1 second to find a path of length 27 after expanding 5057 search nodes.
 
-Fill in `foodHeuristic` in `searchAgents.py` with a heuristic for the `FoodSearchProblem`. Try your agent on the `trickySearch` board:
+### Excercise 7: Food Search Heuristic
+
+Fill in `foodHeuristic` in `searchAgents.py` with a heuristic for the `FoodSearchProblem`.
+
+Try your A* search agent on the `trickySearch` board:
 
 ```bash
 python pacman.py -l trickySearch -p AStarFoodSearchAgent
 ```
 
-Our UCS agent finds the optimal solution in about 13 seconds, exploring over 16,000 nodes.
+For reference, UCS finds the optimal solution in about 6.2 seconds, exploring over 16,000 nodes.
 
 Make sure that your heuristic returns 0 at every goal state and never returns a negative value.
+
+### Excercise 8: Suboptimal Search
+
+Sometimes, even with A* and a good heuristic, finding the optimal path through all the dots is hard. In these cases, we’d still like to find a reasonably good path, quickly. In this section, you’ll write an agent that always greedily eats the closest dot. `ClosestDotSearchAgent` is implemented for you in `searchAgents.py`, but it’s missing a key function that finds a path to the closest dot.
+
+Implement the function `findPathToClosestDot` in searchAgents.py. Our agent solves this maze (suboptimally!) in under a second with a path cost of 350:
+
+```bash
+python pacman.py -l bigSearch -p ClosestDotSearchAgent -z .5
+```
+
+> **Hint:** The quickest way to complete `findPathToClosestDot` is to fill in the `AnyFoodSearchProblem`, which is missing its goal test. Then, solve that problem with an appropriate search function. The solution should be very short!
+
+Your `ClosestDotSearchAgent` won’t always find the shortest possible path through the maze. Make sure you understand why and try to come up with a small example where repeatedly going to the closest dot does not result in finding the shortest path for eating all the dots.
+
 
 ## Useful commands
 
