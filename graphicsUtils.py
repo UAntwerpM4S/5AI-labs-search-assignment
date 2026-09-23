@@ -370,14 +370,6 @@ def move_by(object, x, y=None,
     if lift:
         _canvas.tag_raise(object)
 
-def writePostscript(filename):
-    "Writes the current canvas to a postscript file."
-    psfile = open(filename, 'w')
-    psfile.write(_canvas.postscript(pageanchor='sw',
-                     y='0.c',
-                     x='0.c'))
-    psfile.close()
-
 ghost_shape = [
     (0, - 0.5),
     (0.25, - 0.75),
